@@ -2,9 +2,9 @@ import { readFileSync } from 'fs';
 
 const input = readFileSync('./input.txt', 'utf-8');
 
+/** @type {string[][]} */
 const grid = input.split('\n').map(x => x.split(''));
 
-console.log(grid);
 let count = 0;
 
 grid.forEach((vertical, vIndex) =>
@@ -28,6 +28,10 @@ function process(char, vIndex, hIndex) {
   left(vIndex, hIndex);
   up(vIndex, hIndex);
   down(vIndex, hIndex);
+  downRight(vIndex, hIndex);
+  downLeft(vIndex, hIndex);
+  upRight(vIndex, hIndex);
+  upLeft(vIndex, hIndex);
 }
 
 /**
@@ -39,9 +43,9 @@ function process(char, vIndex, hIndex) {
 function right(vIndex, hIndex) {
   const row = grid[vIndex];
 
-  if (row.length > hIndex + 2) {
-    return;
-  }
+  // if (row.length > hIndex + 1) {
+  //   return;
+  // }
 
   if (
     row[hIndex + 1] === 'M' &&
@@ -61,9 +65,9 @@ function right(vIndex, hIndex) {
 function left(vIndex, hIndex) {
   const row = grid[vIndex];
 
-  if (hIndex < 2) {
-    return;
-  }
+  // if (hIndex < 2) {
+  //   return;
+  // }
 
   if (
     row[hIndex - 1] === 'M' &&
@@ -74,6 +78,11 @@ function left(vIndex, hIndex) {
   }
 }
 
+/**
+ * @param {number} vIndex
+ * @param {number} hIndex
+ * @returns
+ */
 function down(vIndex, hIndex) {
   const column = getColumn(hIndex);
 
@@ -90,23 +99,105 @@ function down(vIndex, hIndex) {
   }
 }
 
+/**
+ * @param {number} vIndex
+ * @param {number} hIndex
+ * @returns
+ */
 function up(vIndex, hIndex) {
   const column = getColumn(hIndex);
 
-  if (vIndex < 2) {
-    return;
-  }
+  // if (vIndex < 2) {
+  //   return;
+  // }
 
   if (
-    column[vIndex + 1] === 'M' &&
-    column[vIndex + 2] === 'A' &&
-    column[vIndex + 3] === 'S'
+    column[vIndex - 1] === 'M' &&
+    column[vIndex - 2] === 'A' &&
+    column[vIndex - 3] === 'S'
   ) {
     count += 1;
   }
 }
 
-function downRight()
+/**
+ * @param {number} vIndex
+ * @param {number} hIndex
+ * @returns
+ */
+function downRight(vIndex, hIndex) {
+  if (vIndex + 3 >= grid.length
+    || hIndex + 2 > grid[0].length) {
+    return;
+  }
+
+  if (grid[vIndex + 1][hIndex + 1] === 'M' &&
+    grid[vIndex + 2][hIndex + 2] === 'A' &&
+    grid[vIndex + 3][hIndex + 3] === 'S'
+  ) {
+    count += 1;
+  }
+}
+
+/**
+ * @param {number} vIndex
+ * @param {number} hIndex
+ * @returns
+ */
+function downLeft(vIndex, hIndex) {
+  if (
+    vIndex + 3 >= grid.length
+  ) {
+    return;
+  }
+  if (
+    grid[vIndex + 1][hIndex - 1] === 'M' &&
+    grid[vIndex + 2][hIndex - 2] === 'A' &&
+    grid[vIndex + 3][hIndex - 3] === 'S'
+  ) {
+    count += 1;
+  }
+}
+
+/**
+ * @param {number} vIndex
+ * @param {number} hIndex
+ * @returns
+ */
+function upRight(vIndex, hIndex) {
+  if (vIndex <= 2
+    || hIndex + 2 >= grid[0].length) {
+    return;
+  }
+
+  if (grid[vIndex - 1][hIndex + 1] === 'M' &&
+    grid[vIndex - 2][hIndex + 2] === 'A' &&
+    grid[vIndex - 3][hIndex + 3] === 'S'
+  ) {
+    count += 1;
+
+  }
+}
+
+/**
+ * @param {number} vIndex
+ * @param {number} hIndex
+ * @returns
+ */
+function upLeft(vIndex, hIndex) {
+  if (vIndex <= 2
+    // || hIndex <= 2
+  ) {
+    return;
+  }
+
+  if (grid[vIndex - 1][hIndex - 1] === 'M' &&
+    grid[vIndex - 2][hIndex - 2] === 'A' &&
+    grid[vIndex - 3][hIndex - 3] === 'S'
+  ) {
+    count += 1;
+  }
+}
 
 /**
  *
